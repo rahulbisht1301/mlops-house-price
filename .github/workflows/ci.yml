@@ -22,7 +22,9 @@ jobs:
 
     - name: Run training on sample data
       env:
+        DATA_MODE: sample
         DATA_PATH: data/sample.csv
+        ENABLE_MLFLOW: false
         MLFLOW_TRACKING_URI: ""
       run: |
         python src/train.py \
