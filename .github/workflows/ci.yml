@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run training on sample data
+      env:
+        DATA_PATH: data/sample.csv
+        MLFLOW_TRACKING_URI: ""
+      run: |
+        python src/train.py \
+          --data-path data/sample.csv \
+          --metric accuracy
