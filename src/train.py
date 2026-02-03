@@ -1,12 +1,11 @@
 import os
 import pandas as pd
-import mlflow
-import mlflow.sklearn
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
 DATA_PATH = os.getenv("DATA_PATH", "data/sample.csv")
+ENABLE_MLFLOW = os.getenv("ENABLE_MLFLOW", "false").lower() == "true"
 
 def main():
     df = pd.read_csv(DATA_PATH)
@@ -26,8 +25,11 @@ def main():
 
     print(f"Accuracy: {acc}")
 
-    # MLflow only runs in CD
-    if os.getenv("MLFLOW_TRACKING_URI"):
+    # ✅ MLflow ONLY in CD
+    if ENABLE_MLFLOW:
+        import mlflow
+        import mlflow.sklearn
+
         mlflow.start_run()
         mlflow.log_metric("accuracy", acc)
         mlflow.sklearn.log_model(model, "model")
